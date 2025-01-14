@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @layer base {
+  body {
+    @apply dark:bg-gray-800;
+  }
+} */
+
+@layer base {
+  :root {
+    --bg-color: #F5F5F5;
+    --text-color: #000000;
+    --auth-bg: #e2e4cd;
+  }
+
+  [data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --auth-bg: black;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+}
