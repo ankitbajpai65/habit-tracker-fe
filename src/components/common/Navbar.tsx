@@ -103,7 +103,7 @@ const Navbar = () => {
               size={35}
               className="hover:bg-gray-700 p-2 rounded-full"
             />
-          ) : (
+        ) : (
             <MdOutlineDarkMode
               size={35}
               className="hover:bg-gray-200 p-2 rounded-full"

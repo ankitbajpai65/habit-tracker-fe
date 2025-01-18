@@ -18,6 +18,7 @@ const config: Config = {
         current: "currentColor",
         white: "#ffffff",
         black: "#000000",
+        "green": "#16a34a",
         habit: {
           100: "#E2E4CD",
           200: "#5A5E32",

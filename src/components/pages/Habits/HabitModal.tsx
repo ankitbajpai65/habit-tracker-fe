@@ -1,8 +1,13 @@
+import { errorAlert, successAlert } from "@/components/common/Alert";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
+import { log } from "console";
+import { useTheme } from "next-themes";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { ToastContainer } from "react-toastify";
+import { HabitType } from "./type";
 
 const unitOptions = {
   "Physical Activities": [
@@ -30,30 +35,86 @@ const unitOptions = {
 const HabitModal = (props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setHabits: React.Dispatch<React.SetStateAction<HabitType[]>>;
 }) => {
-  const { isOpen, setIsOpen } = props;
+  const { isOpen, setIsOpen, setHabits } = props;
+  const { theme } = useTheme();
 
   const [habit, setHabit] = useState({
     name: "",
+    startDate: "",
     category: "",
     unit: "",
-    target: "",
-    // frequency: [],
+    target: +"",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setHabit((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleFrequencyChange = (day) => {
-  //   setHabit((prev) => {
-  //     const updatedFrequency = prev.frequency.includes(day)
-  //       ? prev.frequency.filter((d) => d !== day)
-  //       : [...prev.frequency, day];
-  //     return { ...prev, frequency: updatedFrequency };
-  //   });
-  // };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("handleSubmit runs");
+    e.preventDefault();
+
+    if (
+      !habit.name ||
+      !habit.startDate ||
+      !habit.category ||
+      !habit.target ||
+      !habit.unit
+    ) {
+      errorAlert(1000, "Please fill all fields!", theme!);
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            habitName: habit.name,
+            startDate: habit.startDate,
+            category: habit.category,
+            target: {
+              quantity: habit.target,
+              unit: habit.unit,
+            },
+          }),
+        }
+      );
+      const res = await response.json();
+      console.log(res);
+
+      if (res.status === "ok") {
+        setHabits((prev) => [
+          {
+            _id: "",
+            habitName: habit.name,
+            startDate: habit.startDate,
+            category: habit.category,
+            target: {
+              quantity: habit.target,
+              unit: habit.unit,
+            },
+            userId: "",
+            createdAt: "",
+            updatedAt: "",
+          },
+          ...prev,
+        ]);
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.log("Error in creating habit", error);
+    }
+  };
 
   return (
     <Modal isOpen={isOpen}>
@@ -66,33 +127,22 @@ const HabitModal = (props: {
         <h3 className="text-2xl text-start font-bold text-habit-200 mb-5">
           Add Habit
         </h3>
-        {/* <div className="w-full flex flex-col gap-2">
-          <label htmlFor="" className="ml-1">
-            Habit
-          </label>
-          <Input type="text" placeholder="Habit" style="w-full" />
-        </div>
-        <div className="w-full flex flex-col gap-2">
-          <label htmlFor="" className="ml-1">
-            Start Date
-          </label>
-          <Input type="date" placeholder="Start Date" style="w-full" />
-        </div>
-        <div className="w-full flex justify-end gap-6 mt-5">
-          <Button
-            type="outlined"
-            text="Cancel"
-            onClick={() => setIsOpen(false)}
-          />
-          <Button type="filled" text="Save" />
-        </div> */}
-
-        <form className="w-full text-sm flex flex-col gap-3">
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          className="w-full text-sm flex flex-col gap-3"
+        >
           <div className="w-full flex flex-col gap-1">
             <label htmlFor="" className="ml-1">
               Start Date
             </label>
-            <Input type="date" placeholder="Start Date" style="w-full" />
+            <Input
+              type="date"
+              placeholder="Start Date"
+              name="startDate"
+              value={habit.startDate}
+              onChange={(e) => handleChange(e)}
+              style="w-full"
+            />
           </div>
 
           {/* Habit Name */}
@@ -105,7 +155,7 @@ const HabitModal = (props: {
               id="name"
               name="name"
               value={habit.name}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
               className="border rounded w-full p-2"
               placeholder="e.g., Drink Water"
             />
@@ -120,7 +170,7 @@ const HabitModal = (props: {
               id="category"
               name="category"
               value={habit.category}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
               className="border rounded w-full p-2"
             >
               <option value="" disabled>
@@ -145,7 +195,7 @@ const HabitModal = (props: {
                 id="target"
                 name="target"
                 value={habit.target}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 className="border rounded w-full p-2"
                 placeholder="e.g., 8 (glasses, minutes, etc.)"
               />
@@ -159,7 +209,7 @@ const HabitModal = (props: {
                 id="unit"
                 name="unit"
                 value={habit.unit}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 disabled={!habit.category}
                 className="border rounded w-full p-2 disabled:text-gray-400"
               >
@@ -182,10 +232,12 @@ const HabitModal = (props: {
               text="Cancel"
               onClick={() => setIsOpen(false)}
             />
-            <Button variant="filled" text="Save" />
+            <Button variant="filled" text="Save" type="submit" />
           </div>
         </form>
       </div>
+
+      <ToastContainer />
     </Modal>
   );
 };
