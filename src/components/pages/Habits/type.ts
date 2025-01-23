@@ -12,7 +12,7 @@ export type HabitType = {
   };
   history?: [
     {
-      date: Date;
+      date: string;
       quantity: number;
       status: "completed" | "missed" | "incomplete";
     }

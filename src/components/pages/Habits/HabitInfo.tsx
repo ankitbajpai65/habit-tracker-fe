@@ -1,12 +1,42 @@
 "use client";
-import React from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { IoIosWater } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import streakImg from "@/assets/streak.svg";
 import piechart from "@/assets/piechart.png";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { HabitType } from "./type";
 
 const HabitInfo = () => {
+  const pathname = usePathname();
+  const habitId = pathname.split("/")[pathname.split("/").length - 1];
+
+  const [habitData, setHabitData] = useState<HabitType>();
+
+  useEffect(() => {
+    fetchHabitInfo();
+  }, []);
+
+  async function fetchHabitInfo() {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/${habitId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const res = await response.json();
+      if (res.status === "ok") setHabitData(res.data);
+    } catch (error) {
+      console.log("Error fetching habit data:", error);
+    }
+  }
+
   return (
     <section
       className="flex flex-col gap-10"
@@ -20,10 +50,13 @@ const HabitInfo = () => {
             className="text-blue-300 bg-white p-2 rounded-full"
           />
           <div>
-            <h1 className="text-white text-2xl font-bold">Drink Water</h1>
-            <h6 className="text-white text-lg font-semibold">
+            <h1 className="text-white text-2xl font-bold">
+              {habitData?.habitName}
+            </h1>
+            {/* <h6 className="text-white text-lg font-semibold">
               You are on fire, keep going
-            </h6>
+            </h6> */}
+            <h6 className="text-white font-medium">{habitData?.category}</h6>
           </div>
         </span>
         <button>

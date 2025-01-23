@@ -64,7 +64,6 @@ export default function Signup() {
         }
       );
       const res = await response.json();
-      // console.log(res);
 
       if (res.status === "ok") {
         successAlert(1000, "User registered successfully", theme!);

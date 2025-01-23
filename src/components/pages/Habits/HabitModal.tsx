@@ -2,9 +2,8 @@ import { errorAlert, successAlert } from "@/components/common/Alert";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
-import { log } from "console";
 import { useTheme } from "next-themes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { ToastContainer } from "react-toastify";
 import { HabitType } from "./type";
@@ -35,9 +34,10 @@ const unitOptions = {
 const HabitModal = (props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  activeHabit?: HabitType;
   setHabits: React.Dispatch<React.SetStateAction<HabitType[]>>;
 }) => {
-  const { isOpen, setIsOpen, setHabits } = props;
+  const { isOpen, setIsOpen, activeHabit, setHabits } = props;
   const { theme } = useTheme();
 
   const [habit, setHabit] = useState({
@@ -48,6 +48,18 @@ const HabitModal = (props: {
     target: +"",
   });
 
+  useEffect(() => {
+    if (activeHabit) {
+      setHabit({
+        name: activeHabit.habitName,
+        startDate: activeHabit.startDate,
+        category: activeHabit.category,
+        unit: activeHabit.target.unit,
+        target: activeHabit.target.quantity,
+      });
+    }
+  }, [activeHabit]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -55,20 +67,7 @@ const HabitModal = (props: {
     setHabit((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("handleSubmit runs");
-    e.preventDefault();
-
-    if (
-      !habit.name ||
-      !habit.startDate ||
-      !habit.category ||
-      !habit.target ||
-      !habit.unit
-    ) {
-      errorAlert(1000, "Please fill all fields!", theme!);
-      return;
-    }
+  const addHabit = async () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/habit/create`,
@@ -90,7 +89,6 @@ const HabitModal = (props: {
         }
       );
       const res = await response.json();
-      console.log(res);
 
       if (res.status === "ok") {
         setHabits((prev) => [
@@ -106,6 +104,13 @@ const HabitModal = (props: {
             userId: "",
             createdAt: "",
             updatedAt: "",
+            history: [
+              {
+                quantity: 0,
+                status: "missed",
+                date: habit.startDate,
+              },
+            ],
           },
           ...prev,
         ]);
@@ -114,6 +119,76 @@ const HabitModal = (props: {
     } catch (error) {
       console.log("Error in creating habit", error);
     }
+  };
+
+  const editHabit = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/edit/${activeHabit?._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            habitName: habit.name,
+            startDate: habit.startDate,
+            category: habit.category,
+            target: {
+              quantity: habit.target,
+              unit: habit.unit,
+            },
+          }),
+          credentials: "include",
+        }
+      );
+
+      const res = await response.json();
+
+      if (res.status === "ok") {
+        setHabits((prev) => {
+          return prev.map((habit) => {
+            if (habit._id === activeHabit?._id) {
+              return {
+                _id: activeHabit?._id,
+                habitName: habit.name,
+                startDate: habit.startDate,
+                category: habit.category,
+                target: {
+                  quantity: habit.target,
+                  unit: habit.unit,
+                },
+                userId: "",
+                createdAt: "",
+                updatedAt: "",
+              };
+            }
+            return habit;
+          });
+        });
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.log("Error in editing habit:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (
+      !habit.name ||
+      !habit.startDate ||
+      !habit.category ||
+      !habit.target ||
+      !habit.unit
+    ) {
+      errorAlert(1000, "Please fill all fields!", theme!);
+      return;
+    }
+
+    if (activeHabit) editHabit();
+    else addHabit();
   };
 
   return (
@@ -125,7 +200,7 @@ const HabitModal = (props: {
           className="absolute top-3 right-4 font-extrabold cursor-pointer text-bold p-1 hover:bg-habit-100 rounded-full"
         />
         <h3 className="text-2xl text-start font-bold text-habit-200 mb-5">
-          Add Habit
+          {activeHabit ? "Edit Habit" : "Add Habit"}
         </h3>
         <form
           onSubmit={(e) => handleSubmit(e)}

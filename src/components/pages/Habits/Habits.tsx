@@ -1,8 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Button from "@/components/common/Button";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "@/components/common/Input";
-import { MdEdit } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMdAdd } from "react-icons/io";
 import HabitModal from "./HabitModal";
@@ -18,15 +16,27 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
 const Habits = () => {
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [habits, setHabits] = useState<HabitType[]>();
+  const [activeHabit, setActiveHabit] = useState<HabitType>();
   const [showHabitMenu, setShowHabitMenu] = useState<boolean>(false);
   const [activeMenuHabitId, setActiveMenuHabitId] = useState<string>("");
   const [showHabitModal, setShowHabitModal] = useState<boolean>(false);
 
   useEffect(() => {
     fetchhabits();
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setActiveMenuHabitId("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const toggleHabitMenu = () => {
@@ -57,6 +67,47 @@ const Habits = () => {
     }
   }
 
+  async function editHabit(
+    e: React.MouseEvent<HTMLButtonElement>,
+    habit: HabitType
+  ) {
+    e.stopPropagation();
+    setActiveHabit(habit);
+    setShowHabitModal(true);
+  }
+
+  async function deleteHabit(
+    e: React.MouseEvent<HTMLButtonElement>,
+    habitId: string
+  ) {
+    e.stopPropagation();
+    const confirmation = confirm("Do you want to delete this habit?");
+    if (!confirmation) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habitId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const res = await response.json();
+
+      if (res.status === "ok") {
+        setHabits((prev) => prev?.filter((habit) => habit._id !== habitId));
+      }
+    } catch (error) {
+      console.log("Error in deleting habit:", error);
+    } finally {
+      setActiveMenuHabitId("");
+    }
+  }
+
   const handleUpdate = (habitId: string, type: string) => {
     setHabits((prev) =>
       prev?.map((item) =>
@@ -65,11 +116,11 @@ const Habits = () => {
               ...item,
               history: [
                 {
-                  ...item.history[0],
+                  ...item.history![0],
                   quantity:
                     type === "increment"
-                      ? item.history[0].quantity + 1
-                      : item.history[0].quantity - 1,
+                      ? item.history![0].quantity + 1
+                      : item.history![0].quantity - 1,
                 },
               ],
             }
@@ -166,7 +217,7 @@ const Habits = () => {
             habits.map((habit, index) => (
               <div
                 key={index}
-                onClick={() => router.push("habits/1")}
+                onClick={() => router.push(`habits/${habit._id}`)}
                 className="w-1/6 bg-[var(--auth-bg)] flex flex-col gap-4 px-3 py-4 rounded-md cursor-pointer"
               >
                 <div className="flex flex-col gap-1">
@@ -184,13 +235,22 @@ const Habits = () => {
                           className="hover:bg-white rounded-full p-1"
                         />
                       </button>
-                      {activeMenuHabitId === habit._id && (
-                        <div className="absolute -right-24 top-0 bg-white text-sm rounded-md shadow-xl z-50">
-                          <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white">
+                      {activeMenuHabitId && activeMenuHabitId === habit._id && (
+                        <div
+                          ref={menuRef}
+                          className="absolute -right-24 top-0 bg-white text-sm rounded-md shadow-xl z-50"
+                        >
+                          <button
+                            onClick={(e) => editHabit(e, habit)}
+                            className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                          >
                             <FaRegEdit />
                             Edit
                           </button>
-                          <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white">
+                          <button
+                            onClick={(e) => deleteHabit(e, habit._id)}
+                            className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                          >
                             <MdOutlineDeleteOutline size={16} />
                             Delete
                           </button>
@@ -202,7 +262,7 @@ const Habits = () => {
                 </div>
                 <div className="flex justify-between items-center gap-3">
                   <Progressbar
-                    progress={habit.history[0].quantity}
+                    progress={habit.history![0].quantity}
                     total={habit.target.quantity}
                   />
                   <span className="flex gap-2 text-sm">
@@ -217,7 +277,7 @@ const Habits = () => {
                         className="bg-white p-1 rounded-full"
                       />
                     </button>
-                    {habit.history[0].quantity}
+                    {habit.history![0].quantity}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -230,15 +290,15 @@ const Habits = () => {
                 </div>
                 <button
                   className={`${
-                    habit.target.quantity === habit.history[0].quantity &&
+                    habit.target.quantity === habit.history![0].quantity &&
                     "text-green font-medium"
                   } text-xs flex items-center gap-1 rounded-md ml-auto `}
                   onClick={(e) => handleMarkDone(e, habit._id)}
                 >
                   <FaCircleCheck />
-                  {habit.target.quantity === habit.history[0].quantity
+                  {habit.target.quantity === habit.history![0].quantity
                     ? "Marked"
-                    : "Mark"}{" "}
+                    : "Mark"}
                   as done
                 </button>
               </div>
@@ -277,6 +337,7 @@ const Habits = () => {
         <HabitModal
           isOpen={showHabitModal}
           setIsOpen={setShowHabitModal}
+          activeHabit={activeHabit}
           setHabits={setHabits}
         />
       )}
