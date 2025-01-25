@@ -35,7 +35,7 @@ const HabitModal = (props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeHabit?: HabitType;
-  setHabits: React.Dispatch<React.SetStateAction<HabitType[]>>;
+  setHabits: React.Dispatch<React.SetStateAction<HabitType[] | undefined>>;
 }) => {
   const { isOpen, setIsOpen, activeHabit, setHabits } = props;
   const { theme } = useTheme();
@@ -112,7 +112,7 @@ const HabitModal = (props: {
               },
             ],
           },
-          ...prev,
+          ...prev!,
         ]);
         setIsOpen(false);
       }
@@ -147,16 +147,16 @@ const HabitModal = (props: {
 
       if (res.status === "ok") {
         setHabits((prev) => {
-          return prev.map((habit) => {
+          return prev!.map((habit) => {
             if (habit._id === activeHabit?._id) {
               return {
                 _id: activeHabit?._id,
-                habitName: habit.name,
+                habitName: habit.habitName,
                 startDate: habit.startDate,
                 category: habit.category,
                 target: {
-                  quantity: habit.target,
-                  unit: habit.unit,
+                  quantity: habit.target.quantity,
+                  unit: habit.target.unit,
                 },
                 userId: "",
                 createdAt: "",

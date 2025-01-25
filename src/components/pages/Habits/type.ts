@@ -10,11 +10,13 @@ export type HabitType = {
     quantity: number;
     unit: string;
   };
-  history?: [
-    {
-      date: string;
-      quantity: number;
-      status: "completed" | "missed" | "incomplete";
-    }
-  ];
+  history?: {
+    date: string;
+    quantity: number;
+    status: "completed" | "missed" | "incomplete";
+  }[];
+  streak?: {
+    current: number;
+    longest: number;
+  };
 };

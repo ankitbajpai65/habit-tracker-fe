@@ -4,9 +4,9 @@ const Input = (props: {
   type: string;
   placeholder: string;
   name: string;
-  value: string;
+  value?: string;
   style?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   const { type, placeholder, name, value, style, onChange } = props;
 
