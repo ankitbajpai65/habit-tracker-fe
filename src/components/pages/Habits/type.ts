@@ -20,3 +20,14 @@ export type HabitType = {
     longest: number;
   };
 };
+
+export type PieChartDataType = {
+  name: string;
+  value: number;
+}[];
+
+export type BarChartDataType = {
+  name: string;
+  date: string;
+  quantity: number;
+}[];
