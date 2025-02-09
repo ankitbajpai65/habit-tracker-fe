@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosWater } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import streakImg from "@/assets/streak.svg";
-import piechart from "@/assets/piechart.png";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BarChartDataType, HabitType, PieChartDataType } from "./type";
 import { Pie, PieChart } from "recharts";
 import {
@@ -21,13 +20,20 @@ import {
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import HabitModal from "./HabitModal";
 
 const localizer = momentLocalizer(moment);
 
 const HabitInfo = () => {
+  const router = useRouter();
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const habitId = pathname.split("/")[pathname.split("/").length - 1];
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [habitData, setHabitData] = useState<HabitType>();
   const [pieChartData, setPieChartData] = useState<PieChartDataType>();
   const [barChartData, setBarChartData] = useState<BarChartDataType>();
@@ -37,6 +43,16 @@ const HabitInfo = () => {
 
   useEffect(() => {
     fetchHabitInfo();
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -98,6 +114,38 @@ const HabitInfo = () => {
     }
   }
 
+  async function deleteHabit(
+    e: React.MouseEvent<HTMLButtonElement>,
+    habitId?: string
+  ) {
+    e.stopPropagation();
+    const confirmation = confirm("Do you want to delete this habit?");
+    if (!confirmation) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habitId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const res = await response.json();
+
+      if (res.status === "ok") {
+        router.push("/habits");
+      }
+    } catch (error) {
+      console.log("Error in deleting habit:", error);
+    } finally {
+      setIsMenuOpen(false);
+    }
+  }
+
   const dayPropGetter = (date: Date) => {
     if (!habitData || !habitData.history) return {};
 
@@ -137,9 +185,32 @@ const HabitInfo = () => {
             <h6 className="text-white font-medium">{habitData?.category}</h6>
           </div>
         </span>
-        <button>
-          <BsThreeDotsVertical size={25} className="text-white" />
-        </button>
+        <div className="relative">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <BsThreeDotsVertical size={25} className="text-white" />
+          </button>
+          {isMenuOpen && (
+            <div
+              ref={menuRef}
+              className="absolute -left-24 top-0 bg-white text-sm rounded-md shadow-xl z-50"
+            >
+              <button
+                onClick={(e) => setIsModalOpen(true)}
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+              >
+                <FaRegEdit />
+                Edit
+              </button>
+              <button
+                onClick={(e) => deleteHabit(e, habitData?._id)}
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+              >
+                <MdOutlineDeleteOutline size={16} />
+                Delete
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* STATS */}
@@ -154,7 +225,10 @@ const HabitInfo = () => {
             />
           </span>
           <p className="text-lg font-semibold">
-            <span className="text-3xl font-bold mr-1">5</span>days streak
+            <span className="text-3xl font-bold mr-1">
+              {habitData?.streak?.current}
+            </span>
+            days streak
           </p>
         </div>
         <div className="bg-white w-2/5 flex items-center justify-center">
@@ -200,7 +274,7 @@ const HabitInfo = () => {
               Longest Streak
             </span>
             <span className="bg-habit-200 text-white text-xl font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center gap-2 px-6">
-              6
+              {habitData?.streak?.longest}
               <Image
                 src={streakImg}
                 width={20}
@@ -257,6 +331,15 @@ const HabitInfo = () => {
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <HabitModal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          activeHabit={habitData}
+          setHabitData={setHabitData}
+        />
+      )}
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import { errorAlert, successAlert } from "@/components/common/Alert";
+import { errorAlert } from "@/components/common/Alert";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
@@ -35,9 +35,10 @@ const HabitModal = (props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeHabit?: HabitType;
-  setHabits: React.Dispatch<React.SetStateAction<HabitType[] | undefined>>;
+  setHabits?: React.Dispatch<React.SetStateAction<HabitType[] | undefined>>;
+  setHabitData?: React.Dispatch<React.SetStateAction<HabitType | undefined>>;
 }) => {
-  const { isOpen, setIsOpen, activeHabit, setHabits } = props;
+  const { isOpen, setIsOpen, activeHabit, setHabits, setHabitData } = props;
   const { theme } = useTheme();
 
   const [habit, setHabit] = useState({
@@ -91,7 +92,7 @@ const HabitModal = (props: {
       const res = await response.json();
 
       if (res.status === "ok") {
-        setHabits((prev) => [
+        setHabits!((prev) => [
           {
             _id: "",
             habitName: habit.name,
@@ -146,26 +147,41 @@ const HabitModal = (props: {
       const res = await response.json();
 
       if (res.status === "ok") {
-        setHabits((prev) => {
-          return prev!.map((habit) => {
-            if (habit._id === activeHabit?._id) {
-              return {
-                _id: activeHabit?._id,
-                habitName: habit.habitName,
-                startDate: habit.startDate,
-                category: habit.category,
-                target: {
-                  quantity: habit.target.quantity,
-                  unit: habit.target.unit,
-                },
-                userId: "",
-                createdAt: "",
-                updatedAt: "",
-              };
-            }
-            return habit;
+        setHabits &&
+          setHabits((prev) => {
+            return prev!.map((habit) => {
+              if (habit._id === activeHabit?._id) {
+                return {
+                  _id: activeHabit?._id,
+                  habitName: habit.habitName,
+                  startDate: habit.startDate,
+                  category: habit.category,
+                  target: {
+                    quantity: habit.target.quantity,
+                    unit: habit.target.unit,
+                  },
+                  userId: "",
+                  createdAt: "",
+                  updatedAt: "",
+                };
+              }
+              return habit;
+            });
           });
-        });
+
+        setHabitData &&
+          setHabitData((prev) => ({
+            ...prev,
+            _id: activeHabit?._id ?? "",
+            habitName: habit.habitName,
+            startDate: habit.startDate,
+            category: habit.category,
+            target: {
+              quantity: habit.target?.quantity ?? prev.target?.quantity,
+              unit: habit.target?.unit ?? prev.target?.unit,
+            },
+          }));
+
         setIsOpen(false);
       }
     } catch (error) {
@@ -275,6 +291,7 @@ const HabitModal = (props: {
                 placeholder="e.g., 8 (glasses, minutes, etc.)"
               />
             </div>
+
             {/* Unit */}
             <div className="w-1/3 flex flex-col gap-1">
               <label htmlFor="" className="ml-1">

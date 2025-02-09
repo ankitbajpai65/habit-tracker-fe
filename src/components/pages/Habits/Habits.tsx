@@ -6,7 +6,6 @@ import { IoMdAdd } from "react-icons/io";
 import HabitModal from "./HabitModal";
 import LocalLoader from "@/components/common/LocalLoader";
 import { HabitType } from "./type";
-
 import HabitCard from "./HabitCard";
 
 const Habits = () => {
