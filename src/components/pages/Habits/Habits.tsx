@@ -83,7 +83,7 @@ const Habits = () => {
                   onClick={() => setShowHabitModal(true)}
                   className="w-max px-3 py-2 hover:bg-habit-200 hover:text-white"
                 >
-                  Breake Bad habit
+                  Break Bad habit
                 </button>
               </div>
             )}

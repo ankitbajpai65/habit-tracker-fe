@@ -92,29 +92,30 @@ const HabitModal = (props: {
       const res = await response.json();
 
       if (res.status === "ok") {
-        setHabits!((prev) => [
-          {
-            _id: "",
-            habitName: habit.name,
-            startDate: habit.startDate,
-            category: habit.category,
-            target: {
-              quantity: habit.target,
-              unit: habit.unit,
-            },
-            userId: "",
-            createdAt: "",
-            updatedAt: "",
-            history: [
-              {
-                quantity: 0,
-                status: "missed",
-                date: habit.startDate,
-              },
-            ],
-          },
-          ...prev!,
-        ]);
+        // setHabits!((prev) => [
+        //   {
+        //     _id: "",
+        //     habitName: habit.name,
+        //     startDate: habit.startDate,
+        //     category: habit.category,
+        //     target: {
+        //       quantity: habit.target,
+        //       unit: habit.unit,
+        //     },
+        //     userId: "",
+        //     createdAt: "",
+        //     updatedAt: "",
+        //     history: [
+        //       {
+        //         quantity: 0,
+        //         status: "incomplete",
+        //         date: habit.startDate,
+        //       },
+        //     ],
+        //   },
+        //   ...prev!,
+        // ]);
+        setHabits!((prev) => [res.habit, ...prev!]);
         setIsOpen(false);
       }
     } catch (error) {
@@ -149,23 +150,20 @@ const HabitModal = (props: {
       if (res.status === "ok") {
         setHabits &&
           setHabits((prev) => {
-            return prev!.map((habit) => {
-              if (habit._id === activeHabit?._id) {
+            return prev!.map((item) => {
+              if (item._id === activeHabit?._id) {
                 return {
-                  _id: activeHabit?._id,
-                  habitName: habit.habitName,
+                  ...item,
+                  habitName: habit.name,
                   startDate: habit.startDate,
                   category: habit.category,
                   target: {
-                    quantity: habit.target.quantity,
-                    unit: habit.target.unit,
+                    quantity: habit.target,
+                    unit: habit.unit,
                   },
-                  userId: "",
-                  createdAt: "",
-                  updatedAt: "",
                 };
               }
-              return habit;
+              return item;
             });
           });
 
@@ -173,12 +171,13 @@ const HabitModal = (props: {
           setHabitData((prev) => ({
             ...prev,
             _id: activeHabit?._id ?? "",
-            habitName: habit.habitName,
+            userId: activeHabit?.userId ?? "",
+            habitName: habit.name,
             startDate: habit.startDate,
             category: habit.category,
             target: {
-              quantity: habit.target?.quantity ?? prev.target?.quantity,
-              unit: habit.target?.unit ?? prev.target?.unit,
+              quantity: habit.target ?? prev.target?.quantity,
+              unit: habit.unit ?? prev.target?.unit,
             },
           }));
 

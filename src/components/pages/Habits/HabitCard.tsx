@@ -34,26 +34,19 @@ const HabitCard = (props: {
     };
   }, []);
 
-  async function editHabit(
-    e: React.MouseEvent<HTMLButtonElement>,
-    habit: HabitType
-  ) {
+  async function editHabit(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     setActiveHabit(habit);
     setShowHabitModal(true);
   }
 
-  async function deleteHabit(
-    e: React.MouseEvent<HTMLButtonElement>,
-    habitId: string
-  ) {
+  async function deleteHabit(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    const confirmation = confirm("Do you want to delete this habit?");
-    if (!confirmation) return;
+    if (!confirm("Do you want to delete this habit?")) return;
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habitId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habit._id}`,
         {
           method: "DELETE",
           headers: {
@@ -66,7 +59,7 @@ const HabitCard = (props: {
       const res = await response.json();
 
       if (res.status === "ok") {
-        setHabits((prev) => prev?.filter((habit) => habit._id !== habitId));
+        setHabits((prev) => prev?.filter((item) => item._id !== habit._id));
       }
     } catch (error) {
       console.log("Error in deleting habit:", error);
@@ -76,14 +69,13 @@ const HabitCard = (props: {
   }
 
   async function updateHabit(
-    habitId: string,
     updatedQuantity: number,
     e?: React.MouseEvent<HTMLButtonElement>
   ) {
     e?.stopPropagation();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/habit/update/${habitId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/habit/update/${habit._id}`,
         {
           method: "PATCH",
           headers: {
@@ -94,19 +86,21 @@ const HabitCard = (props: {
         }
       );
       const res = await response.json();
-      console.log(res);
+      // console.log(res);
 
       if (response.ok) {
         setHabits((prev) =>
           prev?.map((item) =>
-            item._id === habitId
+            item._id === habit._id
               ? {
                   ...item,
-                  history: item.history!.map((entry, index, historyArray) =>
-                    index === historyArray.length - 1
-                      ? { ...entry, quantity: updatedQuantity }
-                      : entry
-                  ),
+                  history: item.history
+                    ? item.history.map((entry, index, historyArray) =>
+                        index === historyArray.length - 1
+                          ? { ...entry, quantity: updatedQuantity }
+                          : entry
+                      )
+                    : [],
                 }
               : item
           )
@@ -119,26 +113,34 @@ const HabitCard = (props: {
     }
   }
 
-  const updateQuantity = async (habitId: string, type: string) => {
-    if (!habit) {
-      console.error("Habit not found!");
-      return;
-    }
-
+  const updateQuantity = async (type: string) => {
     const today = new Date().toLocaleDateString("en-CA");
-
     const todayEntryIndex = habit.history!.findIndex(
       (entry) => entry.date === today
     );
-    const todayEntry = habit.history![todayEntryIndex];
 
-    const updatedQuantity =
-      type === "increment"
-        ? (todayEntry?.quantity || 0) + 1
-        : (todayEntry?.quantity || 0) - 1;
+    let updatedHistory = [...habit.history!];
+    if (todayEntryIndex !== -1) {
+      updatedHistory[todayEntryIndex].quantity =
+        type === "increment"
+          ? (updatedHistory[todayEntryIndex].quantity || 0) + 1
+          : updatedHistory[todayEntryIndex].quantity - 1;
+    } else {
+      updatedHistory.push({ date: today, quantity: 1, status: "incomplete" });
+    }
 
-    updateHabit(habitId, updatedQuantity);
+    setHabits((prev) =>
+      prev?.map((item) =>
+        item._id === habit._id ? { ...item, history: updatedHistory } : item
+      )
+    );
+
+    updateHabit(updatedHistory[todayEntryIndex]?.quantity || 1);
   };
+
+  const latestQuantity =
+    habit.history?.[habit.history.length - 1]?.quantity ?? 0;
+  const targetQuantity = habit.target.quantity;
 
   return (
     <div
@@ -167,14 +169,16 @@ const HabitCard = (props: {
                 className="absolute -right-24 top-0 bg-white text-sm rounded-md shadow-xl z-50"
               >
                 <button
-                  onClick={(e) => editHabit(e, habit)}
+                  // onClick={(e) => editHabit(e, habit)}
+                  onClick={editHabit}
                   className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
                 >
                   <FaRegEdit />
                   Edit
                 </button>
                 <button
-                  onClick={(e) => deleteHabit(e, habit._id)}
+                  // onClick={(e) => deleteHabit(e, habit._id)}
+                  onClick={deleteHabit}
                   className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
                 >
                   <MdOutlineDeleteOutline size={16} />
@@ -187,45 +191,36 @@ const HabitCard = (props: {
         <p className="text-gray-500 text-xs">{habit.category}</p>
       </div>
       <div className="flex justify-between items-center gap-3">
-        <Progressbar
-          progress={habit.history![habit.history!.length - 1].quantity}
-          total={habit.target.quantity}
-        />
+        {habit && habit.history && (
+          <Progressbar progress={latestQuantity} total={targetQuantity} />
+        )}
         <span className="flex gap-2 text-sm">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              updateQuantity(habit._id, "decrement");
+              updateQuantity("decrement");
             }}
-            disabled={habit.history![habit.history!.length - 1].quantity === 0}
+            disabled={latestQuantity === 0}
           >
             <FaMinus
               size={20}
               className={`p-1 rounded-full ${
-                habit.history![habit.history!.length - 1].quantity === 0
-                  ? "bg-zinc-300"
-                  : "bg-white"
+                latestQuantity === 0 ? "bg-zinc-300" : "bg-white"
               }`}
             />
           </button>
-          {habit.history![habit.history!.length - 1].quantity}
+          {latestQuantity}
           <button
             onClick={(e) => {
               e.stopPropagation();
-              updateQuantity(habit._id, "increment");
+              updateQuantity("increment");
             }}
-            disabled={
-              habit.history![habit.history!.length - 1].quantity ===
-              habit.target.quantity
-            }
+            disabled={latestQuantity === targetQuantity}
           >
             <FaPlus
               size={20}
               className={`p-1 rounded-full ${
-                habit.history![habit.history!.length - 1].quantity ===
-                habit.target.quantity
-                  ? "bg-zinc-300"
-                  : "bg-white"
+                latestQuantity === targetQuantity ? "bg-zinc-300" : "bg-white"
               }`}
             />
           </button>
@@ -233,27 +228,14 @@ const HabitCard = (props: {
       </div>
       <button
         className={`${
-          habit.target.quantity ===
-            habit.history![habit.history!.length - 1].quantity &&
-          "text-green font-medium"
+          targetQuantity === latestQuantity && "text-green font-medium"
         } text-xs flex items-center gap-1 rounded-md ml-auto `}
         onClick={(e) =>
-          updateHabit(
-            habit._id,
-            habit.history![habit.history!.length - 1].quantity !==
-              habit.target.quantity
-              ? habit.target.quantity
-              : 0,
-            e
-          )
+          updateHabit(latestQuantity === targetQuantity ? 0 : targetQuantity, e)
         }
       >
         <FaCircleCheck />
-        {habit.target.quantity ===
-        habit.history![habit.history!.length - 1].quantity
-          ? "Marked "
-          : "Mark "}
-        as done
+        {latestQuantity === targetQuantity ? "Marked" : "Mark"} as done
       </button>
     </div>
   );

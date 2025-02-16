@@ -38,7 +38,7 @@ const HabitInfo = () => {
   const [pieChartData, setPieChartData] = useState<PieChartDataType>();
   const [barChartData, setBarChartData] = useState<BarChartDataType>();
   const [completedDays, setCompletedDays] = useState<number>(0);
-  const [missedDays, setMissedDays] = useState<number>(0);
+  const [incompleteDays, setIncompleteDays] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<string>();
 
   useEffect(() => {
@@ -58,15 +58,15 @@ const HabitInfo = () => {
   useEffect(() => {
     if (habitData) {
       let completed = 0;
-      let missed = 0;
+      let incomplete = 0;
       let barData: BarChartDataType = [];
 
       habitData.history &&
         habitData.history.forEach((entry) => {
           if (entry.status === "completed") {
             completed += 1;
-          } else if (entry.status === "missed") {
-            missed += 1;
+          } else if (entry.status === "incomplete") {
+            incomplete += 1;
           }
           barData.push({
             name: habitData.habitName,
@@ -81,13 +81,13 @@ const HabitInfo = () => {
           value: completed,
         },
         {
-          name: "Missed Days",
-          value: missed,
+          name: "Incomplete Days",
+          value: incomplete,
         },
       ]);
       setBarChartData(barData);
       setCompletedDays(completed);
-      setMissedDays(missed);
+      setIncompleteDays(incomplete);
     }
   }, [habitData]);
 
@@ -156,7 +156,7 @@ const HabitInfo = () => {
       if (entry.status === "completed") {
         return { style: { backgroundColor: "#d4edda", color: "#155724" } };
       }
-      if (entry.status === "missed") {
+      if (entry.status === "incomplete") {
         return { style: { backgroundColor: "#f8d7da", color: "#721c24" } };
       }
     }
@@ -264,9 +264,11 @@ const HabitInfo = () => {
             </span>
           </div>
           <div className="bg-habit-100 flex justify-between rounded-md">
-            <span className="text-xl font-semibold py-3 pl-5">Missed Days</span>
+            <span className="text-xl font-semibold py-3 pl-5">
+              Incomplete Days
+            </span>
             <span className="bg-habit-200 text-white text-xl font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center px-6">
-              {missedDays} / {habitData?.history!.length}
+              {incompleteDays} / {habitData?.history!.length}
             </span>
           </div>
           <div className="bg-habit-100 flex justify-between rounded-md">
