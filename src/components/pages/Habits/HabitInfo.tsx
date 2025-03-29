@@ -23,6 +23,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import HabitModal from "./HabitModal";
+import ConfirmationModal from "@/components/common/ConfirmationModal";
 
 const localizer = momentLocalizer(moment);
 
@@ -34,6 +35,7 @@ const HabitInfo = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [habitData, setHabitData] = useState<HabitType>();
   const [pieChartData, setPieChartData] = useState<PieChartDataType>();
   const [barChartData, setBarChartData] = useState<BarChartDataType>();
@@ -115,10 +117,10 @@ const HabitInfo = () => {
   }
 
   async function deleteHabit(
-    e: React.MouseEvent<HTMLButtonElement>,
+    // e: React.MouseEvent<HTMLButtonElement>,
     habitId?: string
   ) {
-    e.stopPropagation();
+    // e.stopPropagation();
     const confirmation = confirm("Do you want to delete this habit?");
     if (!confirmation) return;
 
@@ -202,7 +204,11 @@ const HabitInfo = () => {
                 Edit
               </button>
               <button
-                onClick={(e) => deleteHabit(e, habitData?._id)}
+                // onClick={(e) => deleteHabit(e, habitData?._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsConfirmModalOpen(true);
+                }}
                 className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
               >
                 <MdOutlineDeleteOutline size={16} />
@@ -340,6 +346,17 @@ const HabitInfo = () => {
           setIsOpen={setIsModalOpen}
           activeHabit={habitData}
           setHabitData={setHabitData}
+        />
+      )}
+
+      {isConfirmModalOpen && (
+        <ConfirmationModal
+          isOpen={isConfirmModalOpen}
+          setIsOpen={setIsConfirmModalOpen}
+          title="Delete Habit"
+          text="Are you sure you want to delete this habit"
+          confirmText="Delete"
+          onConfirm={() => deleteHabit(habitData?._id)}
         />
       )}
     </section>

@@ -10,6 +10,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
 import { useUserContext } from "@/app/context/userContext";
 import Loader from "./Loader";
+import logo from "../../assets/logo.png";
+import logoWhite from "../../assets/logo_white.png";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -90,7 +93,15 @@ const Navbar = () => {
         className="text-4xl font-extrabold"
         onClick={() => router.push("/")}
       >
-        XYZ
+        {/* XYZ */}
+        {/* <Img src={logo} alt="" /> */}
+        <Image
+          src={logo}
+          // src={logoWhite}
+          width={160}
+          height={160}
+          alt="Picture of the author"
+        />
       </button>
       <span className="flex items-center gap-8">
         <button
@@ -103,7 +114,7 @@ const Navbar = () => {
               size={35}
               className="hover:bg-gray-700 p-2 rounded-full"
             />
-        ) : (
+          ) : (
             <MdOutlineDarkMode
               size={35}
               className="hover:bg-gray-200 p-2 rounded-full"
