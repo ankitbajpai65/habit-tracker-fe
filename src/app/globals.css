@@ -2,24 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer base {
-  body {
-    @apply dark:bg-gray-800;
-  }
-} */
-
 @layer base {
   :root {
     --bg-color: #f5f5f5;
     --text-color: #000000;
     --auth-bg: #e2e4cd;
-    /* --footer-bg: #dcdcdc; */
     --footer-bg: #ededed;
     --habitBanner-bg: #eeeeee;
     --auth-bg: #ffffff;
     --subcard-bg: #e2e4cd;
     --menu-bg: #ffffff;
-    /* --menuHover-bg: #ececec; */
     --menuHover-bg: #f2f2f2;
   }
 
@@ -30,7 +22,6 @@
     --habitBanner-bg: #0a0a0a;
     --auth-bg: #252525;
     --subcard-bg: #323232;
-    /* --menu-bg: #0a0a0a; */
     --menu-bg: #252525;
     --menuHover-bg: #393939;
   }
@@ -40,36 +31,3 @@
     color: var(--text-color);
   }
 }
-
-/* [data-theme="dark"] .rbc-calendar {
-  background-color: #252525; 
-  color: white;
-}
-
-[data-theme="dark"] .rbc-month-view {
-  background-color: #252525;
-}
-
-[data-theme="dark"] .rbc-header {
-  background-color: #323232;
-  color: white;
-  border-color: #444;
-} */
-
-/* [data-theme="dark"] .rbc-day-bg {
-  background-color: #00000057 !important;
-  border-color: #444;
-} */
-
-/* [data-theme="dark"] .rbc-today {
-  background-color: #333 !important;
-} */
-
-/* [data-theme="dark"] .rbc-off-range {
-  color: #888;
-}
-
-[data-theme="dark"] .rbc-event {
-  background-color: #5A5E32;
-  color: white;
-} */

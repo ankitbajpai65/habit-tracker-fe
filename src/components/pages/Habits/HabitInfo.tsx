@@ -126,7 +126,6 @@ const HabitInfo = () => {
     // e: React.MouseEvent<HTMLButtonElement>,
     habitId?: string
   ) {
-    // e.stopPropagation();
     const confirmation = confirm("Do you want to delete this habit?");
     if (!confirmation) return;
 
