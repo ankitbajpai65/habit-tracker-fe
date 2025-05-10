@@ -17,7 +17,7 @@ const ConfirmationModal = (props: {
 
   return (
     <Modal isOpen={isOpen}>
-      <div className="w-[450px] p-8 flex-col justify-center gap-4 rounded-lg flex items-center bg-white relative z-50 m-3">
+      <div className="w-[450px] p-8 flex-col justify-center gap-4 rounded-lg flex items-center bg-[var(--auth-bg)] relative z-50 m-3">
         <IoClose
           size={25}
           onClick={() => setIsOpen(false)}

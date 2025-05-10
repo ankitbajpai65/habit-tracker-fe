@@ -6,7 +6,7 @@ import streakImg from "@/assets/streak.svg";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { BarChartDataType, HabitType, PieChartDataType } from "./type";
-import { Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 import {
   BarChart,
   Bar,
@@ -24,6 +24,9 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import HabitModal from "./HabitModal";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { useTheme } from "next-themes";
 
 const localizer = momentLocalizer(moment);
 
@@ -31,6 +34,7 @@ const HabitInfo = () => {
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+  const { theme } = useTheme();
   const habitId = pathname.split("/")[pathname.split("/").length - 1];
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -42,6 +46,8 @@ const HabitInfo = () => {
   const [completedDays, setCompletedDays] = useState<number>(0);
   const [incompleteDays, setIncompleteDays] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<string>();
+
+  const COLORS = ["#5A5E32", `${theme !== "dark" ? "#f2f2f2" : "#121212"}`];
 
   useEffect(() => {
     fetchHabitInfo();
@@ -156,13 +162,18 @@ const HabitInfo = () => {
 
     if (entry) {
       if (entry.status === "completed") {
-        return { style: { backgroundColor: "#d4edda", color: "#155724" } };
-      }
-      if (entry.status === "incomplete") {
-        return { style: { backgroundColor: "#f8d7da", color: "#721c24" } };
+        return {
+          style: { backgroundColor: theme === "dark" ? "#032e15" : "#d4edda" },
+        };
+      } else if (entry.status === "incomplete") {
+        return {
+          style: { backgroundColor: theme === "dark" ? "#540015" : "#f8d7da" },
+        };
       }
     }
-    return { style: { backgroundColor: "#f8f9fa" } }; // Default
+    return {
+      style: { backgroundColor: theme === "dark" ? "#00000057" : "#fff" },
+    };
   };
 
   return (
@@ -171,34 +182,29 @@ const HabitInfo = () => {
       style={{ minHeight: "calc(100vh - 4rem)", height: "auto" }}
     >
       {/* HABIT HEADER */}
-      <div className="bg-habit-200 flex gap-2 justify-between px-8 py-6">
+      <div className="bg-[var(--habitBanner-bg)] flex gap-2 justify-between px-8 py-6 mb-8">
         <span className="flex items-center gap-3">
           <IoIosWater
             size={45}
-            className="text-blue-300 bg-white p-2 rounded-full"
+            className="text-blue-300 bg-white dark:bg-black p-2 rounded-full"
           />
           <div>
-            <h1 className="text-white text-2xl font-bold">
-              {habitData?.habitName}
-            </h1>
-            {/* <h6 className="text-white text-lg font-semibold">
-              You are on fire, keep going
-            </h6> */}
-            <h6 className="text-white font-medium">{habitData?.category}</h6>
+            <h1 className="text-2xl font-bold">{habitData?.habitName}</h1>
+            <h6 className="font-medium">{habitData?.category}</h6>
           </div>
         </span>
         <div className="relative">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <BsThreeDotsVertical size={25} className="text-white" />
+            <BsThreeDotsVertical size={25} />
           </button>
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute -left-24 top-0 bg-white text-sm rounded-md shadow-xl z-50"
+              className="absolute -left-24 top-0 bg-[var(--menu-bg)] text-sm rounded-md shadow-xl z-50"
             >
               <button
                 onClick={(e) => setIsModalOpen(true)}
-                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-tl-md rounded-tr-md hover:bg-[var(--menuHover-bg)]"
               >
                 <FaRegEdit />
                 Edit
@@ -209,7 +215,7 @@ const HabitInfo = () => {
                   e.stopPropagation();
                   setIsConfirmModalOpen(true);
                 }}
-                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-bl-md rounded-br-md hover:bg-[var(--menuHover-bg)]"
               >
                 <MdOutlineDeleteOutline size={16} />
                 Delete
@@ -220,8 +226,8 @@ const HabitInfo = () => {
       </div>
 
       {/* STATS */}
-      <div className="flex gap-6 px-10">
-        <div className="bg-white w-1/5 flex flex-col items-center justify-center gap-3">
+      <div className="flex gap-6 px-10 ">
+        <div className="bg-[var(--auth-bg)] w-1/5 flex flex-col items-center justify-center gap-3 rounded-xl">
           <span className="bg-gray-200 size-20 flex items-center justify-center p-3 rounded-full">
             <Image
               src={streakImg}
@@ -237,17 +243,26 @@ const HabitInfo = () => {
             days streak
           </p>
         </div>
-        <div className="bg-white w-2/5 flex items-center justify-center">
+        <div className="bg-[var(--auth-bg)] w-2/5 flex items-center justify-center rounded-xl">
           <PieChart width={300} height={280}>
             <Pie
               data={pieChartData}
               dataKey="value"
               nameKey="name"
+              stroke="none"
               cx="50%"
               cy="50%"
               outerRadius={100}
+              innerRadius={50}
               fill="#5A5E32"
-            />
+            >
+              {pieChartData?.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
             <Tooltip
               formatter={(value, name) => [`${value} days`, name]}
               contentStyle={{
@@ -260,8 +275,8 @@ const HabitInfo = () => {
             />
           </PieChart>
         </div>
-        <div className="bg-white w-3/5 flex flex-col justify-center gap-4 px-8">
-          <div className="bg-habit-100 flex justify-between rounded-md">
+        <div className="bg-[var(--auth-bg)] w-3/5 flex flex-col justify-center gap-4 rounded-xl px-8">
+          <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
             <span className="text-xl font-semibold py-3 pl-5">
               Completed Days
             </span>
@@ -269,7 +284,7 @@ const HabitInfo = () => {
               {completedDays} / {habitData?.history!.length}
             </span>
           </div>
-          <div className="bg-habit-100 flex justify-between rounded-md">
+          <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
             <span className="text-xl font-semibold py-3 pl-5">
               Incomplete Days
             </span>
@@ -277,7 +292,7 @@ const HabitInfo = () => {
               {incompleteDays} / {habitData?.history!.length}
             </span>
           </div>
-          <div className="bg-habit-100 flex justify-between rounded-md">
+          <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
             <span className="text-xl font-semibold py-3 pl-5">
               Longest Streak
             </span>
@@ -295,8 +310,8 @@ const HabitInfo = () => {
       </div>
 
       {/* GRAPHS */}
-      <div className="w-full flex justify-center gap-6 px-10 m-auto">
-        <div className="bg-white w-2/5 h-96 flex justify-center items-center text-xs p-6">
+      <div className="w-full flex justify-center gap-6 px-10 m-auto mb-20">
+        <div className="bg-[var(--auth-bg)] w-2/5 h-96 flex justify-center items-center text-xs rounded-xl p-6">
           <Calendar
             localizer={localizer}
             events={[]}
@@ -310,7 +325,7 @@ const HabitInfo = () => {
             views={["month"]}
           />
         </div>
-        <div className="bg-white w-2/5 h-96 text-xs py-8">
+        <div className="bg-[var(--auth-bg)] w-2/5 h-96 text-xs rounded-xl py-8">
           {barChartData && (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -327,13 +342,16 @@ const HabitInfo = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis dataKey="quantity" />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="quantity"
-                  fill="#5A5E32"
-                  // activeBar={<Rectangle fill="pink" stroke="blue" />}
+                <Tooltip
+                  cursor={{ fill: "none" }}
+                  contentStyle={{
+                    backgroundColor: theme === "dark" ? "#000000" : "#fff",
+                    borderColor: theme === "dark" ? "#4b5563" : "#e5e7eb",
+                    borderRadius: "4px",
+                  }}
                 />
+                <Legend />
+                <Bar dataKey="quantity" fill="#5A5E32" />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -365,19 +383,19 @@ const HabitInfo = () => {
 
 const CustomToolbar = ({ label, onNavigate }: any) => {
   return (
-    <div className="flex justify-between items-center p-2 bg-gray-100">
+    <div className="flex justify-between items-center p-2 bg-[var(--footer-bg)]">
       <button
         onClick={() => onNavigate("PREV")}
-        className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+        className="px-2 py-1 bg-[var(--auth-bg)] rounded hover:bg-[var(--footer-bg)]"
       >
-        Prev
+        <MdKeyboardArrowLeft size={20} />
       </button>
       <span className="font-semibold">{label}</span>
       <button
         onClick={() => onNavigate("NEXT")}
-        className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+        className="px-2 py-1 bg-[var(--auth-bg)] rounded hover:bg-[var(--footer-bg)]"
       >
-        Next
+        <MdKeyboardArrowRight size={20} />
       </button>
     </div>
   );

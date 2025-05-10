@@ -44,7 +44,7 @@ export const Progressbar = (props: { progress: number; total: number }) => {
         y="45%"
         dominantBaseline="middle"
         textAnchor="middle"
-        className="text-xs font-bold fill-gray-700"
+        className="text-xs font-bold fill-[var(--text-color)]"
       >
         {completionText}
       </text>
@@ -53,7 +53,7 @@ export const Progressbar = (props: { progress: number; total: number }) => {
         y="67%"
         dominantBaseline="middle"
         textAnchor="middle"
-        className="text-[10px] font-medium fill-gray-600"
+        className="text-[10px] font-medium fill-[var(--text-color)]"
       >
         {Math.round(percentage)}%
       </text>

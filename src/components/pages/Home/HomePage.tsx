@@ -9,9 +9,11 @@ import img4 from "@/assets/img-4.webp";
 import trackHabitImg from "@/assets/track-habits-dark.webp";
 import goalsImg from "@/assets/personalized-goals-dark.webp";
 import Image from "next/image";
-import { FaUserCheck } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/app/context/userContext";
+import { MdOutlineTrackChanges } from "react-icons/md";
+import { FaCalendarCheck } from "react-icons/fa";
+import { FaChartLine } from "react-icons/fa";
 
 const cardsData = [
   {
@@ -54,6 +56,24 @@ const cardsData2 = [
   },
 ];
 
+const howItWorks = [
+  {
+    icon: <MdOutlineTrackChanges size={35} />,
+    title: "Set Your Goals",
+    desc: " Define what habits you want to build or break. Our platform helps you set clear and achievable goals.",
+  },
+  {
+    icon: <FaCalendarCheck size={32} />,
+    title: "Track Daily",
+    desc: "Log your daily habits effortlessly. Keep track of your progress with our intuitive interface.",
+  },
+  {
+    icon: <FaChartLine size={32} />,
+    title: "Monitor Progress",
+    desc: "Receive personalized insights and reminders to stay motivated and on track.",
+  },
+];
+
 const HomePage = () => {
   const router = useRouter();
   const { userDetails } = useUserContext();
@@ -61,15 +81,14 @@ const HomePage = () => {
   return (
     <>
       <section
-        // className="min-h-screen px-4 lg:px-20 py-8"
         className="min-h-screen flex flex-col items-center gap-20 z-10"
         style={{
           minHeight: "calc(100vh - 4rem)",
         }}
       >
-        <div className="w-full xl:w-10/12 flex flex-col md:flex-row gap-6 items-center justify-center py-8">
+        <div className="h-[90vh] w-full xl:w-10/12 flex flex-col md:flex-row gap-6 items-center justify-center py-8">
           {/* Left Section */}
-          <div className="h-full w-full sm:w-3/4 md:w-1/2 flex flex-col gap-10 justify-center items-center md:items-start">
+          <div className="h-full w-full sm:w-3/4 md:w-1/2 flex flex-col gap-6 justify-center items-center md:items-start">
             <h1 className="text-5xl font-extrabold leading-tight text-center md:text-start">
               Transform Your <span className="text-habit-200">Habits</span>{" "}
               Today
@@ -79,7 +98,7 @@ const HomePage = () => {
               track progress, and join a community dedicated to personal growth.
               Start your journey towards a more disciplined lifestyle now.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-5">
               <Button
                 variant="filled"
                 text="Get Started"
@@ -90,17 +109,13 @@ const HomePage = () => {
               <Button variant="outlined" text="Learn More" />
             </div>
           </div>
+
           {/* Right Section */}
-          <div className="h-full w-5/6 sm:w-3/4 md:w-1/2">
+          <div className="w-5/6 sm:w-3/4 md:w-1/2 flex items-center justify-center">
             <Image
               src={img}
               alt="Hero Section"
-              objectFit="contain"
-              className="m-auto"
-              style={{
-                height: "80%",
-                // width:"85%"
-              }}
+              className="max-w-full max-h-[350px] md:max-h-[550px] object-contain"
             />
           </div>
         </div>
@@ -146,30 +161,13 @@ const HomePage = () => {
             How It Works
           </h1>
           <div className="flex gap-8">
-            <div className="w-1/3 flex flex-col items-center">
-              <FaUserCheck size={32} />
-              <h2 className="text-3xl font-bold mt-5 mb-1">Set Your Goals</h2>
-              <p className="text-center text-sm">
-                Define what habits you want to build or break. Our platform
-                helps you set clear and achievable goals.
-              </p>
-            </div>
-            <div className="w-1/3 flex flex-col items-center">
-              <FaUserCheck size={32} />
-              <h2 className="text-3xl font-bold mt-5 mb-1">Track Daily</h2>
-              <p className="text-center text-sm">
-                Log your daily habits effortlessly. Keep track of your progress
-                with our intuitive interface.
-              </p>
-            </div>
-            <div className="w-1/3 flex flex-col items-center">
-              <FaUserCheck size={32} />
-              <h2 className="text-3xl font-bold mt-5 mb-1">Monitor Progress</h2>
-              <p className="text-center text-sm">
-                Receive personalized insights and reminders to stay motivated
-                and on track.
-              </p>
-            </div>
+            {howItWorks.map((item, index) => (
+              <div key={index} className="w-1/3 flex flex-col items-center">
+                {item.icon}
+                <h2 className="text-3xl font-bold mt-5 mb-2">{item.title}</h2>
+                <p className="text-center text-sm">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 

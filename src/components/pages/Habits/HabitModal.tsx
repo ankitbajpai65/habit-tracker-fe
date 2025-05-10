@@ -92,29 +92,6 @@ const HabitModal = (props: {
       const res = await response.json();
 
       if (res.status === "ok") {
-        // setHabits!((prev) => [
-        //   {
-        //     _id: "",
-        //     habitName: habit.name,
-        //     startDate: habit.startDate,
-        //     category: habit.category,
-        //     target: {
-        //       quantity: habit.target,
-        //       unit: habit.unit,
-        //     },
-        //     userId: "",
-        //     createdAt: "",
-        //     updatedAt: "",
-        //     history: [
-        //       {
-        //         quantity: 0,
-        //         status: "incomplete",
-        //         date: habit.startDate,
-        //       },
-        //     ],
-        //   },
-        //   ...prev!,
-        // ]);
         setHabits!((prev) => [res.habit, ...prev!]);
         setIsOpen(false);
       }
@@ -208,11 +185,11 @@ const HabitModal = (props: {
 
   return (
     <Modal isOpen={isOpen}>
-      <div className="w-[450px] p-8 flex-col justify-center gap-4 rounded-lg flex items-center bg-white relative z-50 m-3">
+      <div className="w-[450px] p-8 flex-col justify-center gap-4 rounded-lg flex items-center bg-[var(--auth-bg)] relative z-50 m-3">
         <IoClose
-          size={25}
+          size={33}
           onClick={() => setIsOpen(false)}
-          className="absolute top-3 right-4 font-extrabold cursor-pointer text-bold p-1 hover:bg-habit-100 rounded-full"
+          className="absolute top-3 right-4 font-extrabold cursor-pointer text-bold p-2 hover:bg-[var(--footer-bg)] rounded-full"
         />
         <h3 className="text-2xl text-start font-bold text-habit-200 mb-5">
           {activeHabit ? "Edit Habit" : "Add Habit"}

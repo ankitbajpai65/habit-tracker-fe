@@ -160,18 +160,18 @@ const HabitCard = (props: {
             >
               <BsThreeDotsVertical
                 size={25}
-                className="hover:bg-white rounded-full p-1"
+                className="hover:bg-[var(--footer-bg)] rounded-full p-1"
               />
             </button>
             {activeMenuHabitId && activeMenuHabitId === habit._id && (
               <div
                 ref={menuRef}
-                className="absolute -right-24 top-0 bg-white text-sm rounded-md shadow-xl z-50"
+                className="absolute -right-24 top-0 bg-[var(--menu-bg)] text-[var(--text-color)] text-sm rounded-md shadow-xl z-50"
               >
                 <button
                   // onClick={(e) => editHabit(e, habit)}
                   onClick={editHabit}
-                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-tl-md rounded-tr-md hover:bg-[var(--menuHover-bg)]"
                 >
                   <FaRegEdit />
                   Edit
@@ -179,7 +179,7 @@ const HabitCard = (props: {
                 <button
                   // onClick={(e) => deleteHabit(e, habit._id)}
                   onClick={deleteHabit}
-                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-habit-200 hover:text-white"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-bl-md rounded-br-md hover:bg-[var(--menuHover-bg)]"
                 >
                   <MdOutlineDeleteOutline size={16} />
                   Delete
@@ -204,9 +204,10 @@ const HabitCard = (props: {
           >
             <FaMinus
               size={20}
-              className={`p-1 rounded-full ${
-                latestQuantity === 0 ? "bg-zinc-300" : "bg-white"
-              }`}
+              className={`p-1 rounded-full bg-[var(--footer-bg)]`}
+              // className={`p-1 rounded-full ${
+              //   latestQuantity === 0 ? "bg-gray-100" : "bg-gray-300"
+              // }`}
             />
           </button>
           {latestQuantity}
@@ -219,9 +220,12 @@ const HabitCard = (props: {
           >
             <FaPlus
               size={20}
-              className={`p-1 rounded-full ${
-                latestQuantity === targetQuantity ? "bg-zinc-300" : "bg-white"
-              }`}
+              className={`p-1 rounded-full bg-[var(--footer-bg)]`}
+              // className={`p-1 rounded-full ${
+              //   latestQuantity === targetQuantity
+              //     ? "bg-gray-100"
+              //     : "bg-gray-300"
+              // }`}
             />
           </button>
         </span>

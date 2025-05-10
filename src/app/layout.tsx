@@ -5,7 +5,6 @@ import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 import { ThemeProvider } from "next-themes";
 import ClientProvider from "./context/ClientProvider";
-import Head from "next/head";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -23,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" class="dark">
       {/* <ThemeProvider attribute="class"> */}
       {/* <Head>
         <link rel="icon" href="/favicon.ico" />

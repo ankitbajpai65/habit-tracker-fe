@@ -90,7 +90,7 @@ const Login = () => {
     >
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="w-[450px] bg-white flex flex-col gap-4 m-auto p-8 rounded-md"
+        className="w-[480px] bg-[var(--auth-bg)] flex flex-col gap-4 m-auto p-10  rounded-md"
       >
         <h2 className="text-3xl font-bold text-center mb-6">
           Login to your account
@@ -140,7 +140,7 @@ const Login = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2 items-center text-sm">
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-3 items-center">
             <span>Don&apos;t have an account?</span>
             <Link href="/signup" className="text-habit-200 font-medium">
               Signup

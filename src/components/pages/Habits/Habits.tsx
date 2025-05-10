@@ -72,16 +72,16 @@ const Habits = () => {
               <IoIosArrowDown />
             </button>
             {addHabitMenu && (
-              <div className="absolute top-14 w-max flex flex-col bg-white py-2 rounded-md shadow-lg">
+              <div className="absolute top-14 w-max flex flex-col bg-[var(--menu-bg)] py-2 rounded-md shadow-lg">
                 <button
                   onClick={() => setShowHabitModal(true)}
-                  className="w-max px-3 py-2 hover:bg-habit-200 hover:text-white"
+                  className="w-full text-start px-3 py-2 hover:bg-[var(--menuHover-bg)]"
                 >
                   Create Good habit
                 </button>
                 <button
                   onClick={() => setShowHabitModal(true)}
-                  className="w-max px-3 py-2 hover:bg-habit-200 hover:text-white"
+                  className="w-full text-start px-3 py-2 hover:bg-[var(--menuHover-bg)]"
                 >
                   Break Bad habit
                 </button>

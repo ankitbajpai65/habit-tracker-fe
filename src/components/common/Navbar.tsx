@@ -96,7 +96,7 @@ const Navbar = () => {
         {/* XYZ */}
         {/* <Img src={logo} alt="" /> */}
         <Image
-          src={logo}
+          src={theme === "dark" ? logoWhite : logo}
           // src={logoWhite}
           width={160}
           height={160}
@@ -144,7 +144,7 @@ const Navbar = () => {
               />
             </button>
             {showProfileMenu && (
-              <div className="bg-white absolute top-12 -right-14 w-max flex flex-col justify-center gap-2 p-2 rounded-md shadow-xl z-50">
+              <div className="bg-[var(--menu-bg)] absolute top-12 -right-14 w-max flex flex-col justify-center gap-2 p-2 rounded-md shadow-xl z-50">
                 <div className="flex items-center gap-2">
                   <FaUserCircle size={32} />
                   <div>
