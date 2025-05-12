@@ -88,22 +88,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 left-0 bg-[var(--bg-color)] h-16 flex items-center justify-between shadow-md px-20 py-3 z-50">
-      <button
-        className="text-4xl font-extrabold"
-        onClick={() => router.push("/")}
-      >
-        {/* XYZ */}
-        {/* <Img src={logo} alt="" /> */}
+    <nav className="sticky top-0 left-0 bg-[var(--bg-color)] h-16 flex items-center justify-between shadow-md px-3 md:px-8 xl:px-20 py-3 z-50">
+      <button onClick={() => router.push("/")}>
         <Image
           src={theme === "dark" ? logoWhite : logo}
-          // src={logoWhite}
-          width={160}
-          height={160}
+          width={window.innerWidth > 600 ? 160 : 120}
+          height={window.innerWidth > 600 ? 160 : 120}
           alt="Picture of the author"
         />
       </button>
-      <span className="flex items-center gap-8">
+      <span className="flex items-center gap-4 md:gap-8">
         <button
           onClick={() =>
             theme == "dark" ? setTheme("light") : setTheme("dark")
@@ -133,7 +127,7 @@ const Navbar = () => {
             onMouseLeave={toggleHabitMenu}
             className="relative py-3"
           >
-            <button className={`flex items-center gap-1 px-4`}>
+            <button className={`flex items-center gap-1 px-0 md:px-4`}>
               <FaUserCircle size={28} className="mr-1" />
               {userDetails.userName}
               <IoIosArrowDown

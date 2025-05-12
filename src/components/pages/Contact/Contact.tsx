@@ -18,7 +18,15 @@ const Contact = () => {
         <p>We&apos;d love to hear from you! Reach out anytime.</p>
         <div className="flex gap-5 items-center mt-5">
           <MdOutlineMailOutline />
-          <span>Email: support@xyz.com</span>
+          <span>
+            Email:{" "}
+            <a
+              href="mailto:ankit65bajpai@gmail.com"
+              className="text-habit-200 font-medium"
+            >
+              ankit65bajpai@gmail.com
+            </a>
+          </span>
         </div>
       </div>
       <form action="" className="w-[480px] flex flex-col gap-4 m-auto px-8">

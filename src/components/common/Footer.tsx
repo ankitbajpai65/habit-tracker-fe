@@ -5,38 +5,39 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    // <footer className="bg-[var()] py-16">
-    <footer className="bg-[var(--footer-bg)] py-16">
-      <div className="w-full xl:w-10/12 flex flex-col gap-8 m-auto">
-        <div className="flex justify-between">
-          <span></span>
-          <span className="flex gap-8">
+    <footer className="bg-[var(--footer-bg)] text-sm sm:text-base py-10 lg:py-16">
+      <div className="w-full xl:w-5/6 flex flex-col gap-6 m-auto px-3 sm:px-5">
+        <div className="flex flex-col lg:flex-row gap-8 justify-center items-center lg:justify-between">
+          <span className="hidden lg:block"></span>
+          <span className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
             <button>Features</button>
+            <Link href="/contact">Contact</Link>
             <button>Community</button>
             <button>Resources</button>
           </span>
           <span className="flex gap-5">
-            <button>
+            <Link
+              href="https://www.instagram.com/ankitbajpai05"
+              target="_blank"
+            >
               <FaInstagram />
-            </button>
-            <button>
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/ankit65bajpai/"
+              target="_blank"
+            >
               <FaLinkedin />
-            </button>
-            <button>
+            </Link>
+            <Link href="https://x.com/ankitbajpai65" target="_blank">
               <FaXTwitter />
-            </button>
+            </Link>
           </span>
         </div>
-        <hr className="border-t border-black" />
-        <div className="flex gap-10 items-center justify-center">
-          <span>
-            © 2024 XYZ. All rights reserved. Empowering your journey to
-            self-improvement.
-          </span>
-          <Link href="/contact">Contact</Link>
-          <button>Terms and Conditions</button>
-          <button>Privacy Policy</button>
-        </div>
+        <hr className="border-t border-gray-800" />
+        <p className="text-center">
+          © 2025 XYZ. All rights reserved. Empowering your journey to
+          self-improvement.
+        </p>
       </div>
     </footer>
   );

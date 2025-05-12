@@ -16,9 +16,9 @@ const Button = (props: {
       onClick={onClick}
       className={`flex items-center justify-center gap-2 ${
         variant === "outlined"
-          ? "border border-habit-200 text-habit-200 font-semibold"
+          ? "border border-habit-200 text-habit-200"
           : "bg-habit-200 text-white"
-      } px-5 py-2 rounded-sm ${style}`}
+      } text-sm sm:text-base px-3 sm:px-5 py-2 rounded-sm ${style}`}
     >
       {text}
       {loading && <LocalLoader size={5} status={loading} />}

@@ -86,10 +86,9 @@ const HomePage = () => {
           minHeight: "calc(100vh - 4rem)",
         }}
       >
-        <div className="h-[90vh] w-full xl:w-10/12 flex flex-col md:flex-row gap-6 items-center justify-center py-8">
-          {/* Left Section */}
-          <div className="h-full w-full sm:w-3/4 md:w-1/2 flex flex-col gap-6 justify-center items-center md:items-start">
-            <h1 className="text-5xl font-extrabold leading-tight text-center md:text-start">
+        <div className="h-[90vh] w-full xl:w-5/6 flex flex-col md:flex-row gap-6 items-center justify-center px-3 sm:px-5 py-8">
+          <div className="h-full w-full md:w-1/2 flex flex-col gap-6 justify-center items-center md:items-start">
+            <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight text-center md:text-start">
               Transform Your <span className="text-habit-200">Habits</span>{" "}
               Today
             </h1>
@@ -110,8 +109,8 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Right Section */}
-          <div className="w-5/6 sm:w-3/4 md:w-1/2 flex items-center justify-center">
+          {/* Image Section */}
+          <div className="hidden md:flex w-5/6 sm:w-3/4 md:w-1/2 items-center justify-center">
             <Image
               src={img}
               alt="Hero Section"
@@ -120,14 +119,14 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="w-full xl:w-10/12 flex flex-col md:flex-row gap-6 md:gap-2 justify-center">
-          <div className="w-full sm:w-3/4 md:w-1/2">
-            <h1 className="text-4xl font-bold leading-tight text-center md:text-start">
+        <div className="w-full xl:w-5/6 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-4 justify-center px-3 sm:px-5">
+          <div className="w-full md:w-1/2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center md:text-start">
               Explore Our Powerful Habit Tracking Features
             </h1>
           </div>
-          <div className="w-full sm:w-3/4 md:w-1/2">
-            <p>
+          <div className="w-full md:w-1/2">
+            <p className="text-justify sm:text-start">
               Our habit tracker is designed to empower your personal growth
               journey. With intuitive tools for tracking daily habits, setting
               goals, and monitoring progress, you can build new habits or break
@@ -138,44 +137,56 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="w-full xl:w-10/12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="w-full xl:w-5/6 px-3 sm:px-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {cardsData.map((item, index) => (
-              <div key={index} className="overflow-hidden">
+              <div
+                key={index}
+                className="w-[95%] max-w-[350px] md:w-full overflow-hidden mx-auto"
+              >
                 <Image
                   src={item.img}
                   alt="Hero Section"
                   className="w-full h-68"
                 />
                 <div className="py-4">
-                  <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-                  <p className="text-sm text-gray-600">{item.desc}</p>
+                  <h2 className="text-lg md:text-xl font-bold mb-2">
+                    {item.title}
+                  </h2>
+                  <p className="text-sm text-justify md:text-start">
+                    {item.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="w-full xl:w-10/12">
-          <h1 className="text-4xl font-bold leading-tight text-center mb-12">
+        <div className="w-full xl:w-5/6 px-3 sm:px-5">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center mb-12">
             How It Works
           </h1>
-          <div className="flex gap-8">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
             {howItWorks.map((item, index) => (
-              <div key={index} className="w-1/3 flex flex-col items-center">
+              <div
+                key={index}
+                className="w-3/4 sm:w-1/3 flex flex-col items-center"
+              >
                 {item.icon}
-                <h2 className="text-3xl font-bold mt-5 mb-2">{item.title}</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl text-center font-bold mt-5 mb-2">
+                  {item.title}
+                </h2>
                 <p className="text-center text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="w-full xl:w-10/12 flex flex-col items-center">
-          <h1 className="text-4xl font-bold leading-tight text-center">
+        <div className="w-full xl:w-5/6 flex flex-col items-center px-3 sm:px-5">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center">
             Start Your Journey
           </h1>
-          <p className="mt-4 mb-10">
+          <p className="text-center mt-4 mb-10">
             Join our community and take the first step towards a more
             disciplined and productive lifestyle.
           </p>
@@ -189,14 +200,14 @@ const HomePage = () => {
         </div>
 
         <section className="bg-black flex flex-col items-center gap-20 py-20">
-          <div className="w-full xl:w-10/12 flex flex-col md:flex-row gap-6 md:gap-2 justify-center">
-            <div className="w-full sm:w-3/4 md:w-1/2">
-              <h1 className="text-white text-4xl font-bold leading-tight text-center md:text-start">
+          <div className="w-full xl:w-5/6 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-4 justify-center px-3 sm:px-5">
+            <div className="w-full md:w-1/2">
+              <h1 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center md:text-start">
                 Unlock Your Potential with Our Habit Tracker
               </h1>
             </div>
-            <div className="text-white w-full sm:w-3/4 md:w-1/2">
-              <p>
+            <div className="text-white w-full md:w-1/2">
+              <p className="text-justify sm:text-start">
                 Our habit tracker empowers you to build new habits and break old
                 ones with ease. Experience enhanced discipline and productivity
                 through personalized goal setting and progress monitoring. Join
@@ -205,16 +216,21 @@ const HomePage = () => {
               </p>
             </div>
           </div>
-          <div className="w-full xl:w-10/12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="w-full xl:w-5/6 px-3 sm:px-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {cardsData2.map((item, index) => (
-                <div key={index} className="overflow-hidden">
+                <div
+                  key={index}
+                  className="w-[95%] max-w-[350px] md:w-full overflow-hidden mx-auto"
+                >
                   <Image src={item.img} alt="Hero Section" className="w-full" />
                   <div className="py-4">
-                    <h2 className="text-white text-xl font-bold mb-2">
+                    <h2 className="text-white text-lg md:text-xl font-bold mb-2">
                       {item.title}
                     </h2>
-                    <p className="text-white text-sm">{item.desc}</p>
+                    <p className="text-white text-justify md:text-start text-sm">
+                      {item.desc}
+                    </p>
                   </div>
                 </div>
               ))}
