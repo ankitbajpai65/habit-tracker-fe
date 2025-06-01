@@ -9,11 +9,11 @@ export default function NotFound() {
 
   return (
     <section
-      className="flex flex-col gap-5 items-center justify-center"
+      className="flex flex-col gap-5 items-center justify-center px-2"
       style={{ height: "calc(100vh - 4rem)" }}
     >
-      <h2 className="text-3xl font-bold">Oops, Page Not Found</h2>
-      <p className="text-lg mb-3">
+      <h2 className="text-2xl md:text-3xl text-center font-bold">Oops, Page Not Found</h2>
+      <p className="text-base md:text-lg text-center mb-3">
         It seems like the page you&apos;re looking for doesn&apos;t exist or has
         been moved.
       </p>

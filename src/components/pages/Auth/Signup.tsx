@@ -80,16 +80,16 @@ export default function Signup() {
 
   return (
     <section
-      className="flex justify-center items-center"
+      className="flex justify-center items-center px-3"
       style={{
         height: "calc(100vh - 4rem)",
       }}
     >
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="w-[480px] bg-[var(--auth-bg)] flex flex-col gap-4 m-auto p-10 rounded-md"
+       className="w-full max-w-[480px] bg-[var(--auth-bg)] flex flex-col gap-4 text-sm sm:text-base m-auto px-6 py-10 sm:p-10 rounded-md"
       >
-        <h2 className="text-3xl font-bold text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
           Create an account
         </h2>
         <Input

@@ -146,7 +146,7 @@ const HabitCard = (props: {
     <div
       key={habit._id}
       onClick={() => router.push(`habits/${habit._id}`)}
-      className="w-1/6 bg-[var(--auth-bg)] flex flex-col gap-4 px-3 py-4 rounded-md cursor-pointer"
+      className="w-full max-w-[400px] sm:max-w-[250px] bg-[var(--auth-bg)] flex flex-col gap-4 px-3 py-4 rounded-md cursor-pointer"
     >
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
@@ -166,7 +166,8 @@ const HabitCard = (props: {
             {activeMenuHabitId && activeMenuHabitId === habit._id && (
               <div
                 ref={menuRef}
-                className="absolute -right-24 top-0 bg-[var(--menu-bg)] text-[var(--text-color)] text-sm rounded-md shadow-xl z-50"
+                // className="absolute -right-24 top-0 bg-[var(--menu-bg)] text-[var(--text-color)] text-sm rounded-md shadow-xl z-50"
+                className="absolute right-0 top-8 sm:right-0 sm:top-0 bg-[var(--menu-bg)] text-[var(--text-color)] text-sm rounded-md shadow-xl z-50"
               >
                 <button
                   // onClick={(e) => editHabit(e, habit)}

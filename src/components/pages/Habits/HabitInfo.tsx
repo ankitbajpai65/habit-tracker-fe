@@ -181,14 +181,16 @@ const HabitInfo = () => {
       style={{ minHeight: "calc(100vh - 4rem)", height: "auto" }}
     >
       {/* HABIT HEADER */}
-      <div className="bg-[var(--habitBanner-bg)] flex gap-2 justify-between px-8 py-6 mb-8">
+      <div className="bg-[var(--habitBanner-bg)] flex gap-2 justify-between px-3 md:px-8 py-6 mb-8">
         <span className="flex items-center gap-3">
           <IoIosWater
             size={45}
             className="text-blue-300 bg-white dark:bg-black p-2 rounded-full"
           />
           <div>
-            <h1 className="text-2xl font-bold">{habitData?.habitName}</h1>
+            <h1 className="text-xl md:text-2xl font-bold">
+              {habitData?.habitName}
+            </h1>
             <h6 className="font-medium">{habitData?.category}</h6>
           </div>
         </span>
@@ -225,8 +227,8 @@ const HabitInfo = () => {
       </div>
 
       {/* STATS */}
-      <div className="flex gap-6 px-10 ">
-        <div className="bg-[var(--auth-bg)] w-1/5 flex flex-col items-center justify-center gap-3 rounded-xl">
+      <div className="flex flex-col md:flex-row gap-3 lg:gap-6 px-3 md:px-6 lg:px-10">
+        <div className="bg-[var(--auth-bg)] w-full md:w-1/5 flex flex-col items-center justify-center gap-3 rounded-xl py-5">
           <span className="bg-gray-200 size-20 flex items-center justify-center p-3 rounded-full">
             <Image
               src={streakImg}
@@ -235,14 +237,14 @@ const HabitInfo = () => {
               alt="Picture of the author"
             />
           </span>
-          <p className="text-lg font-semibold">
+          <p className="text-lg text-center font-semibold">
             <span className="text-3xl font-bold mr-1">
               {habitData?.streak?.current}
             </span>
             days streak
           </p>
         </div>
-        <div className="bg-[var(--auth-bg)] w-2/5 flex items-center justify-center rounded-xl">
+        <div className="bg-[var(--auth-bg)] w-full md:w-2/5 flex items-center justify-center rounded-xl">
           <PieChart width={300} height={280}>
             <Pie
               data={pieChartData}
@@ -274,28 +276,24 @@ const HabitInfo = () => {
             />
           </PieChart>
         </div>
-        <div className="bg-[var(--auth-bg)] w-3/5 flex flex-col justify-center gap-4 rounded-xl px-8">
+        <div className="bg-[var(--auth-bg)] w-full md:w-3/5 flex flex-col justify-center text-base md:text-lg lg:text-xl gap-4 rounded-xl p-5 lg:px-8">
           <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
-            <span className="text-xl font-semibold py-3 pl-5">
+            <span className="text-lg lg:text-xl font-semibold py-3 pl-5">
               Completed Days
             </span>
-            <span className="bg-habit-200 text-white text-xl font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center px-6">
+            <span className="bg-habit-200 text-white font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center px-4 sm:px-6">
               {completedDays} / {habitData?.history!.length}
             </span>
           </div>
           <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
-            <span className="text-xl font-semibold py-3 pl-5">
-              Incomplete Days
-            </span>
-            <span className="bg-habit-200 text-white text-xl font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center px-6">
+            <span className="font-semibold py-3 pl-5">Incomplete Days</span>
+            <span className="bg-habit-200 text-white font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center px-4 sm:px-6">
               {incompleteDays} / {habitData?.history!.length}
             </span>
           </div>
           <div className="bg-[var(--subcard-bg)] flex justify-between rounded-md">
-            <span className="text-xl font-semibold py-3 pl-5">
-              Longest Streak
-            </span>
-            <span className="bg-habit-200 text-white text-xl font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center gap-2 px-6">
+            <span className="font-semibold py-3 pl-5">Longest Streak</span>
+            <span className="bg-habit-200 text-white font-semibold rounded-tl-full rounded-bl-full rounded-tr-md flex items-center gap-2 px-4 sm:px-6">
               {habitData?.streak?.longest}
               <Image
                 src={streakImg}
@@ -309,8 +307,8 @@ const HabitInfo = () => {
       </div>
 
       {/* GRAPHS */}
-      <div className="w-full flex justify-center gap-6 px-10 m-auto mb-20">
-        <div className="bg-[var(--auth-bg)] w-2/5 h-96 flex justify-center items-center text-xs rounded-xl p-6">
+      <div className="w-full flex flex-col md:flex-row justify-center gap-3 lg:gap-6 px-3 md:px-6 lg:px-10 m-auto mb-20">
+        <div className="bg-[var(--auth-bg)] w-full md:w-2/5 h-96 flex justify-center items-center text-xs rounded-xl p-3 lg:p-6">
           <Calendar
             localizer={localizer}
             events={[]}
@@ -324,7 +322,7 @@ const HabitInfo = () => {
             views={["month"]}
           />
         </div>
-        <div className="bg-[var(--auth-bg)] w-2/5 h-96 text-xs rounded-xl py-8">
+        <div className="bg-[var(--auth-bg)] w-full md:w-3/5 xl:w-2/5 h-96 text-xs rounded-xl py-8">
           {barChartData && (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
