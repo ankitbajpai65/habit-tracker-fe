@@ -122,13 +122,7 @@ const HabitInfo = () => {
     }
   }
 
-  async function deleteHabit(
-    // e: React.MouseEvent<HTMLButtonElement>,
-    habitId?: string
-  ) {
-    const confirmation = confirm("Do you want to delete this habit?");
-    if (!confirmation) return;
-
+  async function deleteHabit(habitId?: string) {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habitId}`,
@@ -211,11 +205,7 @@ const HabitInfo = () => {
                 Edit
               </button>
               <button
-                // onClick={(e) => deleteHabit(e, habitData?._id)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsConfirmModalOpen(true);
-                }}
+                onClick={() => setIsConfirmModalOpen(true)}
                 className="w-full flex items-center gap-2 px-3 py-2 rounded-bl-md rounded-br-md hover:bg-[var(--menuHover-bg)]"
               >
                 <MdOutlineDeleteOutline size={16} />

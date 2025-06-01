@@ -8,6 +8,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import ConfirmationModal from "@/components/common/ConfirmationModal";
 
 const HabitCard = (props: {
   habit: HabitType;
@@ -18,7 +19,7 @@ const HabitCard = (props: {
   const { habit, setHabits, setActiveHabit, setShowHabitModal } = props;
   const menuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [activeMenuHabitId, setActiveMenuHabitId] = useState<string>("");
 
   useEffect(() => {
@@ -40,10 +41,7 @@ const HabitCard = (props: {
     setShowHabitModal(true);
   }
 
-  async function deleteHabit(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    if (!confirm("Do you want to delete this habit?")) return;
-
+  async function deleteHabit() {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/habit/delete/${habit._id}`,
@@ -178,8 +176,10 @@ const HabitCard = (props: {
                   Edit
                 </button>
                 <button
-                  // onClick={(e) => deleteHabit(e, habit._id)}
-                  onClick={deleteHabit}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsConfirmModalOpen(true);
+                  }}
                   className="w-full flex items-center gap-2 px-3 py-2 rounded-bl-md rounded-br-md hover:bg-[var(--menuHover-bg)]"
                 >
                   <MdOutlineDeleteOutline size={16} />
@@ -242,6 +242,17 @@ const HabitCard = (props: {
         <FaCircleCheck />
         {latestQuantity === targetQuantity ? "Marked" : "Mark"} as done
       </button>
+
+      {isConfirmModalOpen && (
+        <ConfirmationModal
+          isOpen={isConfirmModalOpen}
+          setIsOpen={setIsConfirmModalOpen}
+          title="Delete Habit"
+          text="Are you sure you want to delete this habit"
+          confirmText="Delete"
+          onConfirm={() => deleteHabit()}
+        />
+      )}
     </div>
   );
 };
