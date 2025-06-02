@@ -116,8 +116,8 @@ const HabitCard = (props: {
     const todayEntryIndex = habit.history!.findIndex(
       (entry) => entry.date === today
     );
-
     let updatedHistory = [...habit.history!];
+
     if (todayEntryIndex !== -1) {
       updatedHistory[todayEntryIndex].quantity =
         type === "increment"
@@ -132,8 +132,7 @@ const HabitCard = (props: {
         item._id === habit._id ? { ...item, history: updatedHistory } : item
       )
     );
-
-    updateHabit(updatedHistory[todayEntryIndex]?.quantity || 1);
+    updateHabit(updatedHistory[todayEntryIndex]?.quantity);
   };
 
   const latestQuantity =

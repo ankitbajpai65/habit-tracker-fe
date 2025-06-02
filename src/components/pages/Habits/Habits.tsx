@@ -11,13 +11,17 @@ import HabitCard from "./HabitCard";
 const Habits = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [habits, setHabits] = useState<HabitType[]>();
-  const [activeHabit, setActiveHabit] = useState<HabitType>();
+  const [activeHabit, setActiveHabit] = useState<HabitType | null>(null);
   const [addHabitMenu, setAddHabitMenu] = useState<boolean>(false);
   const [showHabitModal, setShowHabitModal] = useState<boolean>(false);
 
   useEffect(() => {
     fetchhabits();
   }, []);
+
+  useEffect(() => {
+    if (!showHabitModal) setActiveHabit(null);
+  }, [showHabitModal]);
 
   const toggleHabitMenu = () => {
     setAddHabitMenu((prev) => !prev);
