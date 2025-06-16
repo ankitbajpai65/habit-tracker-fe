@@ -17,6 +17,7 @@ import Image from "next/image";
 const Navbar = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const [width, setWidth] = useState<number | null>(null);
   const { userDetails, setUserDetails } = useUserContext();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,6 +26,12 @@ const Navbar = () => {
   const toggleHabitMenu = () => {
     setShowProfileMenu((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWidth(window.innerWidth);
+    }
+  }, []);
 
   useEffect(() => {
     fetchUserDetails();
@@ -92,8 +99,10 @@ const Navbar = () => {
       <button onClick={() => router.push("/")}>
         <Image
           src={theme === "dark" ? logoWhite : logo}
-          width={window.innerWidth > 600 ? 160 : 120}
-          height={window.innerWidth > 600 ? 160 : 120}
+          // width={window?.innerWidth > 600 ? 160 : 120}
+          // height={window?.innerWidth > 600 ? 160 : 120}
+          width={width && width > 600 ? 160 : 120}
+          height={width && width > 600 ? 160 : 120}
           alt="Picture of the author"
         />
       </button>

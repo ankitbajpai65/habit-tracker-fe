@@ -139,7 +139,7 @@ const Habits = () => {
         <HabitModal
           isOpen={showHabitModal}
           setIsOpen={setShowHabitModal}
-          activeHabit={activeHabit}
+          activeHabit={activeHabit!}
           setHabits={setHabits}
         />
       )}

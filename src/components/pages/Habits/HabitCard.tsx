@@ -13,7 +13,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 const HabitCard = (props: {
   habit: HabitType;
   setHabits: React.Dispatch<React.SetStateAction<HabitType[] | undefined>>;
-  setActiveHabit: React.Dispatch<React.SetStateAction<HabitType | undefined>>;
+  setActiveHabit: React.Dispatch<React.SetStateAction<HabitType | null>>;
   setShowHabitModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { habit, setHabits, setActiveHabit, setShowHabitModal } = props;

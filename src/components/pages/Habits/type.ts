@@ -4,8 +4,8 @@ export type HabitType = {
   startDate: string;
   category: string;
   userId: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   target: {
     quantity: number;
     unit: string;

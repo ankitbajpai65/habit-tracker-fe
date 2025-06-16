@@ -8,7 +8,22 @@ import { IoClose } from "react-icons/io5";
 import { ToastContainer } from "react-toastify";
 import { HabitType } from "./type";
 
-const unitOptions = {
+type Category =
+  | "Physical Activities"
+  | "Consumption"
+  | "Learning"
+  | "Mindfulness"
+  | "Sleep"
+  | "Hygiene"
+  | "Work"
+  | "Creativity"
+  | "Social"
+  | "Finance"
+  | "Health"
+  | "Entertainment"
+  | "Miscellaneous";
+
+const unitOptions: Record<Category, string[]> = {
   "Physical Activities": [
     "minutes",
     "hours",
@@ -153,8 +168,8 @@ const HabitModal = (props: {
             startDate: habit.startDate,
             category: habit.category,
             target: {
-              quantity: habit.target ?? prev.target?.quantity,
-              unit: habit.unit ?? prev.target?.unit,
+              quantity: habit.target ?? prev!.target?.quantity,
+              unit: habit.unit ?? prev!.target?.unit,
             },
           }));
 
@@ -284,11 +299,14 @@ const HabitModal = (props: {
                 <option value="" disabled>
                   Select Unit
                 </option>
-                {unitOptions[habit?.category]?.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
+                {(Object.keys(unitOptions) as Category[]).includes(
+                  habit.category as Category
+                ) &&
+                  unitOptions[habit.category as Category].map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>

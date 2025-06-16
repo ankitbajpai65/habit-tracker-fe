@@ -3,7 +3,7 @@ import React from "react";
 const Input = (props: {
   type: string;
   placeholder: string;
-  name: string;
+  name?: string;
   value?: string;
   style?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
