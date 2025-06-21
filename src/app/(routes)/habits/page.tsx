@@ -4,9 +4,10 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const page = () => {
   return (
-    <ProtectedRoute>
-      <Habits />
-    </ProtectedRoute>
+    // <ProtectedRoute>
+    //   <Habits />
+    // </ProtectedRoute>
+    <Habits />
   );
 };
 
