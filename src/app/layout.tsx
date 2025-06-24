@@ -23,19 +23,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      {/* <ThemeProvider attribute="class"> */}
-      {/* <Head>
+      <head>
         <link rel="icon" href="/favicon.ico" />
-      </Head> */}
-      <ThemeProvider attribute="data-theme">
-        <body className={montserrat.className}>
+      </head>
+      <body className={montserrat.className}>
+        <ThemeProvider attribute="data-theme">
           <ClientProvider>
             <Navbar />
             {children}
             <Footer />
           </ClientProvider>
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

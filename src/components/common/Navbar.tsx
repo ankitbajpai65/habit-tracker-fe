@@ -9,7 +9,6 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
 import { useUserContext } from "@/app/context/userContext";
-import Loader from "./Loader";
 import logo from "../../assets/logo.png";
 import logoWhite from "../../assets/logo_white.png";
 import Image from "next/image";
@@ -99,8 +98,6 @@ const Navbar = () => {
       <button onClick={() => router.push("/")}>
         <Image
           src={theme === "dark" ? logoWhite : logo}
-          // width={window?.innerWidth > 600 ? 160 : 120}
-          // height={window?.innerWidth > 600 ? 160 : 120}
           width={width && width > 600 ? 160 : 120}
           height={width && width > 600 ? 160 : 120}
           alt="Picture of the author"
@@ -169,8 +166,6 @@ const Navbar = () => {
           </div>
         )}
       </span>
-
-      {isLoading && <Loader />}
     </nav>
   );
 };

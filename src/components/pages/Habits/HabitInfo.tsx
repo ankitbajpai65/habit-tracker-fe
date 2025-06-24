@@ -28,6 +28,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useTheme } from "next-themes";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 const localizer = momentLocalizer(moment);
 
@@ -177,11 +178,16 @@ const HabitInfo = () => {
     >
       {/* HABIT HEADER */}
       <div className="bg-[var(--habitBanner-bg)] flex gap-2 justify-between px-3 md:px-8 py-6 mb-8">
-        <span className="flex items-center gap-3">
-          <IoIosWater
-            size={45}
-            className="text-blue-300 bg-white dark:bg-black p-2 rounded-full"
-          />
+        <span className="flex gap-4">
+          <button
+            onClick={() => router.push("/habits")}
+            className="flex items-start py-1"
+          >
+            <IoArrowBackSharp
+              size={35}
+              className="bg-[var(--auth-bg)] p-2 rounded-full mb-auto"
+            />
+          </button>
           <div>
             <h1 className="text-xl md:text-2xl font-bold">
               {habitData?.habitName}
