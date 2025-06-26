@@ -1,5 +1,5 @@
 "use client";
-import { errorAlert, successAlert } from "@/components/common/Alert";
+import { successAlert } from "@/components/common/Alert";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { validateEmail, validateName, validatePassword } from "@/utils";
@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 
 export default function Signup() {
   const { theme } = useTheme();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [inputDetails, setInputDetails] = useState({
@@ -43,6 +44,8 @@ export default function Signup() {
     e: React.FormEvent<HTMLButtonElement | HTMLFormElement>
   ) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       if (errorMsg) return;
       if (
@@ -72,9 +75,11 @@ export default function Signup() {
           email: "",
           password: "",
         });
-      } else errorAlert(1000, res.error, theme!);
+      } else if (res.status === "error") setErrorMsg(res.error);
     } catch (error) {
       console.log("Error registering user:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,7 +92,7 @@ export default function Signup() {
     >
       <form
         onSubmit={(e) => handleSubmit(e)}
-       className="w-full max-w-[480px] bg-[var(--auth-bg)] flex flex-col gap-4 text-sm sm:text-base m-auto px-6 py-10 sm:p-10 rounded-md"
+        className="w-full max-w-[480px] bg-[var(--auth-bg)] flex flex-col gap-4 text-sm sm:text-base m-auto px-6 py-10 sm:p-10 rounded-md"
       >
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
           Create an account
@@ -131,7 +136,8 @@ export default function Signup() {
             type="submit"
             variant="filled"
             text="Signup"
-            // style="mt-4"
+            loading={isLoading}
+            style="w-full"
           />
         </div>
         {/* <Button text="Continue as guest" onClick={handleSubmit} /> */}

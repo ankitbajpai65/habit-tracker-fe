@@ -105,7 +105,16 @@ const HomePage = () => {
                   userDetails ? router.push("habits") : router.push("/login")
                 }
               />
-              <Button variant="outlined" text="Learn More" />
+              <Button
+                variant="outlined"
+                text="Learn More"
+                onClick={() => {
+                  const el = document.getElementById("learnMore");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              />
             </div>
           </div>
 
@@ -119,7 +128,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="w-full xl:w-5/6 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-4 justify-center px-3 sm:px-5">
+        <div id="features" className="w-full xl:w-5/6 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-4 justify-center px-3 sm:px-5">
           <div className="w-full md:w-1/2">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center md:text-start">
               Explore Our Powerful Habit Tracking Features
@@ -161,7 +170,7 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-
+        <div id="learnMore"></div>
         <div className="w-full xl:w-5/6 px-3 sm:px-5">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center mb-12">
             How It Works

@@ -1,10 +1,8 @@
 "use client";
 import { useUserContext } from "@/app/context/userContext";
-import { errorAlert, successAlert } from "@/components/common/Alert";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { validateEmail, validatePassword } from "@/utils";
-import { useTheme } from "next-themes";
+import { validateEmail } from "@/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -12,7 +10,6 @@ import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 
 const Login = () => {
-  const { theme } = useTheme();
   const router = useRouter();
   const { setUserDetails } = useUserContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,6 +22,7 @@ const Login = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    setErrorMsg("");
     setInputDetails((prev) => ({ ...prev, [name]: value }));
 
     if (name === "email") {
@@ -71,8 +69,8 @@ const Login = () => {
           email: "",
           password: "",
         });
-      } else {
-        errorAlert(1000, res.error, theme!);
+      } else if (res.status === "error") {
+        setErrorMsg(res.message);
       }
     } catch (error) {
       console.log("Error logging in:", error);

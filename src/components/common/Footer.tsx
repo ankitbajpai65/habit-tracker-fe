@@ -12,8 +12,6 @@ const Footer = () => {
           <span className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
             <button>Features</button>
             <Link href="/contact">Contact</Link>
-            <button>Community</button>
-            <button>Resources</button>
           </span>
           <span className="flex gap-5">
             <Link
